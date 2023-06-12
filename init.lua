@@ -48,29 +48,19 @@ vis.events.subscribe(vis.events.WIN_OPEN, write_mru)
 vis:command_register("fzymru", function(argv, force, win, selection, range)
     local command = "cat " .. module.fzymru_filepath .. " | " .. module.fzymru_path .. " " .. module.fzymru_args .. " " .. table.concat(argv, " ")
 
-    -- local file = io.popen(command)
-    -- local output = file:read()
-    -- local success, msg, status = file:close()
-
 	--- Using io.popen() leads to staircase effect, the tty needs to be handled correctly
 	--- with fzy (in contrast to fzf)
+	--- TODO use nil for file parameter
 	local status, output, stderr = vis:pipe(win.file, {start = 0, finish = 0}, command)
+	-- local status, output, stderr = vis:pipe(nil, nil, command)
 
 
     if status == 0 then
-    	-- vis:info(string.format("e '%s'", output))
+		--- Remove trailing newline
         vis:command(string.format("e '%s'", output:sub(1, -2)))
-    -- elseif status == 1 then
-        -- vis:info(string.format("fzy-open: No match. Command %s exited with return value %i." , command, status))
-    -- elseif status == 2 then
-        -- vis:info(string.format("fzy-open: Error. Command %s exited with return value %i." , command, status))
-    -- elseif status == 130 then
-        -- vis:info(string.format("fzy-open: Interrupted. Command %s exited with return value %i" , command, status))
-    -- else
-        -- vis:info(string.format("fzy-open: Unknown exit status %i. command %s exited with return value %i" , status, command, status, status))
     end
 
-    vis:feedkeys("<vis-redraw>")
+    vis:redraw()
 
     return true;
 end)

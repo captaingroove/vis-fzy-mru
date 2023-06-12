@@ -1,3 +1,6 @@
+--- Copyright (C) 2023  Jörg Bakker
+---
+
 local module = {}
 module.fzymru_filepath = os.getenv('HOME') .. '/.mru'
 module.fzymru_path = "fzy"
@@ -44,7 +47,9 @@ vis:command_register("fzymru", function(argv, force, win, selection, range)
 	local command = "cat " .. module.fzymru_filepath .. " | " .. module.fzymru_path .. " " .. module.fzymru_args .. " " .. table.concat(argv, " ")
 	--- Using io.popen() leads to staircase effect, the tty needs to be handled correctly
 	--- when using fzy (in contrast to fzf)
-	local status, output, stderr = vis:pipe(nil, nil, command)
+	local status, output, stderr = vis:pipe(win.file, {start = 0, finish = 0}, command)
+	--- Setting file to nil currently means launching the subprocess without any piping
+	-- local status, output, stderr = vis:pipe(nil, nil, command)
 	if status == 0 then
 		--- Remove trailing newline
 		vis:command(string.format("e '%s'", output:sub(1, -2)))

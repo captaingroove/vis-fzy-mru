@@ -1,7 +1,7 @@
 local module = {}
 module.fzymru_filepath = os.getenv('HOME') .. '/.mru'
 module.fzymru_path = "fzy"
---- TODO fzy doesn't have options to search in the filename only, not in the whole file path
+--- fzy doesn't have options to search in the filename only
 module.fzymru_args = ""
 module.fzymru_history = 20
 
@@ -21,11 +21,11 @@ function write_mru(win)
 	local file_path = win.file.path
 	local mru = read_mru()
 
-	-- check if mru data exists
+	--- Check if mru data exists
 	if mru == nil then mru = {} end
-	-- check if we opened any file
+	--- Check if we opened any file
 	if file_path == nil then return end
-	-- check duplicate
+	--- Check duplicate
 	if file_path == mru[1] then return end
 
 	local f = io.open(module.fzymru_filepath, 'w+')

@@ -45,21 +45,11 @@ vis.events.subscribe(vis.events.WIN_OPEN, write_mru)
 
 vis:command_register("fzymru", function(argv, force, win, selection, range)
 	local command = "cat " .. module.fzymru_filepath .. " | " .. module.fzymru_path .. " " .. module.fzymru_args .. " " .. table.concat(argv, " ")
-	--- Using io.popen() leads to staircase effect, the tty needs to be handled correctly
-	--- when using fzy (in contrast to fzf)
-	--- Setting file to nil currently means launching the subprocess without any piping
-	--- so we need to provide an input file with and empty range
-	--- or otherwise a temporary file to write and read from the output of the subprocess
 	local status, output, stderr = vis:pipe(win.file, {start = 0, finish = 0}, command)
 	if status == 0 then
 		--- Remove trailing newline
 		vis:command(string.format("e '%s'", output:sub(1, -2)))
 	end
-	-- local status, output, stderr = vis:pipe(nil, nil, command)
-	-- if status == 0 then
-		-- --- Remove trailing newline
-		-- vis:command(string.format("e '%s'", stderr:sub(1, -2)))
-	-- end
 	vis:redraw()
 	return true;
 end)

@@ -4,7 +4,6 @@
 local module = {}
 module.fzymru_filepath = os.getenv('HOME') .. '/.mru'
 module.fzymru_path = "fzy"
---- fzy doesn't have options to search in the filename only
 module.fzymru_args = ""
 module.fzymru_history = 20
 
